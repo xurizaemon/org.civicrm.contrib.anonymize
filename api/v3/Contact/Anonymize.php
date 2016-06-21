@@ -50,7 +50,7 @@ function civicrm_api3_contact_Anonymize($params) {
     $create_params = array(
       'first_name' => $faker->firstName($gender),
       'last_name' => $faker->lastName(),
-      'birth_date' => $faker->iso8601('-10 years'),
+      'birth_date' => $faker->iso8601(rand(-10, 50) . ' years'),
       'email' => $faker->safeEmail(),
     );
     $contact = civicrm_api3('Contact', 'Create', array_merge($get_params, $create_params));
