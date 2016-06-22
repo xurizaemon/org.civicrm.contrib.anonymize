@@ -42,7 +42,7 @@ function civicrm_api3_contact_Anonymize($params) {
     $create_params = array(
       'first_name' => $faker->firstName($gender),
       'last_name' => $faker->lastName(),
-      'birth_date' => $faker->iso8601(rand(-10, -50) . ' years'),
+      'birth_date' => $faker->iso8601(rand(-10, -30) . ' years'),
     );
 
     Contact::anonymizeEmails($params['id']);
