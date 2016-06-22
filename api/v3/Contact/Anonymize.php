@@ -1,4 +1,8 @@
 <?php
+/**
+ * @file
+ * Contact API extensions.
+ */
 
 require_once 'vendor/autoload.php';
 
@@ -6,28 +10,36 @@ use Civi\Anonymize\Contact as Contact;
 use Faker\Factory;
 
 /**
- * Contact.Anonymize API specification (optional)
+ * Contact.Anonymize API specification (optional).
+ *
  * This is used for documentation and validation.
  *
- * @param array $spec description of fields supported by this API call
- * @return void
+ * @param array $spec
+ *   Description of fields supported by this API call.
+ *
  * @see http://wiki.civicrm.org/confluence/display/CRMDOC/API+Architecture+Standards
  */
-function _civicrm_api3_contact_Anonymize_spec(&$spec) {
+function _civicrm_api3_contact_anonymize_spec(&$spec) {
   $spec['locale']['api.required'] = 1;
   $spec['id']['api.required'] = 1;
 }
 
 /**
- * Contact.Anonymize API
+ * Contact.Anonymize API.
  *
  * @param array $params
- * @return array API result descriptor
+ *   CiviCRM API parameters.
+ *
+ * @return array
+ *   CiviCRM API result.
+ *
  * @see civicrm_api3_create_success
  * @see civicrm_api3_create_error
+ *
  * @throws API_Exception
+ *   CiviCRM API Exception.
  */
-function civicrm_api3_contact_Anonymize($params) {
+function civicrm_api3_contact_anonymize($params) {
   if (!array_key_exists('locale', $params)) {
     $params['locale'] = 'en_US';
   }
@@ -41,8 +53,8 @@ function civicrm_api3_contact_Anonymize($params) {
       throw new API_Exception('Contact id=' . $params['id'] . ' not found.', 3);
     }
     $values = reset($contact['values']);
-    // At this point, we should identify the type of contact (Individual, Organization)
-    // then generate appropriate data.
+    // At this point, we should identify the type of contact - Individual,
+    // Organization - then generate appropriate data.
     switch ($values['contact_type']) {
       case 'Individual':
         $gender = Contact::genderMapCiviToFaker($values['gender_id']);

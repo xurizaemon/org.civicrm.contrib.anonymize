@@ -1,7 +1,10 @@
 <?php
+/**
+ * @file
+ * CiviCRM Anonymize extension.
+ */
 
 require_once 'anonymize.civix.php';
-require_once 'vendor/autoload.php';
 
 /**
  * Implements hook_civicrm_config().
@@ -16,6 +19,7 @@ function anonymize_civicrm_config(&$config) {
  * Implements hook_civicrm_xmlMenu().
  *
  * @param array $files
+ *   Array of XML files.
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_xmlMenu
  */
@@ -62,12 +66,15 @@ function anonymize_civicrm_disable() {
 /**
  * Implements hook_civicrm_upgrade().
  *
- * @param $op string, the type of operation being performed; 'check' or 'enqueue'
- * @param $queue CRM_Queue_Queue, (for 'enqueue') the modifiable list of pending up upgrade tasks
+ * @param $op string
+ *   The type of operation being performed; 'check' or 'enqueue'.
+ * @param $queue CRM_Queue_Queue
+ *   For 'enqueue', the modifiable list of pending up upgrade tasks.
  *
  * @return mixed
- *   Based on op. for 'check', returns array(boolean) (TRUE if upgrades are pending)
- *                for 'enqueue', returns void
+ *   Based on op.
+ *   For 'check', returns array(boolean) (TRUE if upgrades are pending).
+ *   For 'enqueue', returns void.
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_upgrade
  */
@@ -92,14 +99,15 @@ function anonymize_civicrm_managed(&$entities) {
  *
  * Generate a list of case-types.
  *
- * @param array $caseTypes
- *
  * Note: This hook only runs in CiviCRM 4.4+.
+ *
+ * @param array $casetypes
+ *   Array of case types.
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_caseTypes
  */
-function anonymize_civicrm_caseTypes(&$caseTypes) {
-  _anonymize_civix_civicrm_caseTypes($caseTypes);
+function anonymize_civicrm_caseTypes(&$casetypes) {
+  _anonymize_civix_civicrm_caseTypes($casetypes);
 }
 
 /**
@@ -112,8 +120,8 @@ function anonymize_civicrm_caseTypes(&$caseTypes) {
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_caseTypes
  */
-function anonymize_civicrm_angularModules(&$angularModules) {
-_anonymize_civix_civicrm_angularModules($angularModules);
+function anonymize_civicrm_angularModules(&$angularmodules) {
+  _anonymize_civix_civicrm_angularModules($angularmodules);
 }
 
 /**
@@ -121,36 +129,6 @@ _anonymize_civix_civicrm_angularModules($angularModules);
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_alterSettingsFolders
  */
-function anonymize_civicrm_alterSettingsFolders(&$metaDataFolders = NULL) {
-  _anonymize_civix_civicrm_alterSettingsFolders($metaDataFolders);
+function anonymize_civicrm_alterSettingsFolders(&$metadatafolders = NULL) {
+  _anonymize_civix_civicrm_alterSettingsFolders($metadatafolders);
 }
-
-/**
- * Functions below this ship commented out. Uncomment as required.
- *
-
-/**
- * Implements hook_civicrm_preProcess().
- *
- * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_preProcess
- *
-function anonymize_civicrm_preProcess($formName, &$form) {
-
-} // */
-
-/**
- * Implements hook_civicrm_navigationMenu().
- *
- * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_navigationMenu
- *
-function anonymize_civicrm_navigationMenu(&$menu) {
-  _anonymize_civix_insert_navigation_menu($menu, NULL, array(
-    'label' => ts('The Page', array('domain' => 'org.civicrm.contrib.anonymize')),
-    'name' => 'the_page',
-    'url' => 'civicrm/the-page',
-    'permission' => 'access CiviReport,access CiviContribute',
-    'operator' => 'OR',
-    'separator' => 0,
-  ));
-  _anonymize_civix_navigationMenu($menu);
-} // */
