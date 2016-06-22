@@ -38,6 +38,8 @@ function civicrm_api3_contact_Anonymize($params) {
     );
     $contact = civicrm_api3('Contact', 'Get', $get_params);
     $values = reset($contact['values']);
+    // At this point, we should identify the type of contact (Individual, Organization)
+    // then generate appropriate data.
     $gender = Contact::genderMapCiviToFaker($values['gender_id']);
     $create_params = array(
       'first_name' => $faker->firstName($gender),
