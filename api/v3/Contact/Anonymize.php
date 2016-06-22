@@ -40,12 +40,25 @@ function civicrm_api3_contact_Anonymize($params) {
     $values = reset($contact['values']);
     // At this point, we should identify the type of contact (Individual, Organization)
     // then generate appropriate data.
-    $gender = Contact::genderMapCiviToFaker($values['gender_id']);
-    $create_params = array(
-      'first_name' => $faker->firstName($gender),
-      'last_name' => $faker->lastName(),
-      'birth_date' => $faker->iso8601(rand(-10, -30) . ' years'),
-    );
+    switch ($values['contact_type']) {
+      case 'Individual':
+        $gender = Contact::genderMapCiviToFaker($values['gender_id']);
+        $create_params = array(
+          'first_name' => $faker->firstName($gender),
+          'last_name' => $faker->lastName(),
+          'birth_date' => $faker->iso8601(rand(-10, -30) . ' years'),
+        );
+        break;
+
+      case 'Organization':
+        $create_params = array(
+          'organization_name' => $faker->company(),
+        );
+        break;
+
+      default:
+        throw new API_Exception('Not prepared to handle contact_type=' . $values['contact_type'], 2);
+    }
 
     Contact::anonymizeEmails($params['id']);
     Contact::anonymizeAddresses($params['id']);
@@ -53,6 +66,5 @@ function civicrm_api3_contact_Anonymize($params) {
     $contact = civicrm_api3('Contact', 'Create', array_merge($get_params, $create_params));
     return civicrm_api3_create_success($contact, $get_params, 'Contact', 'Get');
   }
-  // If we bombed out ...
-  throw new API_Exception(/*errorMessage*/ 'Everyone knows that the magicword is "sesame"', /*errorCode*/ 1234);
+  throw new API_Exception('Contact.Anonymize requires a contact ID', 1);
 }
