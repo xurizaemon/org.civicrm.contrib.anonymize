@@ -6,3 +6,4 @@
 * Generate more appropriate data for non-Individual types.
 * Add images but only if there's already an image, and so forth.
 * What to do with custom data? Just vape the lot? Free text unless there are defined options?
+* Performance.
