@@ -50,6 +50,9 @@ function civicrm_api3_contact_Anonymize($params) {
           'first_name' => $faker->firstName($gender),
           'last_name' => $faker->lastName(),
           'birth_date' => $faker->iso8601(rand(-10, -30) . ' years'),
+          'email_greeting_display' => '',
+          'addressee_display' => '',
+          'postal_greeting_display' => '',
         );
         break;
 
