@@ -8,3 +8,4 @@
 * What to do with custom data? Just vape the lot? Free text unless there are defined options?
 * Performance.
 * Call job.update_greeting when done.
+* Disable logging before we start & destroy log tables, re-enable after if previously enabled.
