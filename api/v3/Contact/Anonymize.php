@@ -2,6 +2,7 @@
 
 require_once 'vendor/autoload.php';
 
+use Civi\Anonymize\Contact as Contact;
 use Faker\Factory;
 
 /**
@@ -31,28 +32,22 @@ function civicrm_api3_contact_Anonymize($params) {
     $params['locale'] = 'en_US';
   }
   $faker = Faker\Factory::create($params['locale']);
-
   if (array_key_exists('id', $params)) {
     $get_params = array(
       'id' => $params['id'],
     );
     $contact = civicrm_api3('Contact', 'Get', $get_params);
     $values = reset($contact['values']);
-    $gender = null;
-    if (isset($values['gender_id'])) {
-      if ($values['gender_id'] == 1) {
-        $gender = 'female';
-      }
-      else if ($values['gender_id'] == 2) {
-        $gender = 'male';
-      }
-    }
+    $gender = Contact::genderMapCiviToFaker($values['gender_id']);
     $create_params = array(
       'first_name' => $faker->firstName($gender),
       'last_name' => $faker->lastName(),
       'birth_date' => $faker->iso8601(rand(-10, -50) . ' years'),
-      'email' => $faker->safeEmail(),
     );
+
+    Contact::anonymizeEmails($params['id']);
+    Contact::anonymizeAddresses($params['id']);
+
     $contact = civicrm_api3('Contact', 'Create', array_merge($get_params, $create_params));
     return civicrm_api3_create_success($contact, $get_params, 'Contact', 'Get');
   }

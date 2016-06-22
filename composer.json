@@ -1,4 +1,9 @@
 {
+    "autoload": {
+      "psr-0": {
+        "Civi": ""
+      }
+    },
     "require": {
         "fzaninotto/faker": "^1.6"
     }
