@@ -37,6 +37,9 @@ function civicrm_api3_contact_Anonymize($params) {
       'id' => $params['id'],
     );
     $contact = civicrm_api3('Contact', 'Get', $get_params);
+    if (empty($contact['values'])) {
+      throw new API_Exception('Contact id=' . $params['id'] . ' not found.', 3);
+    }
     $values = reset($contact['values']);
     // At this point, we should identify the type of contact (Individual, Organization)
     // then generate appropriate data.
