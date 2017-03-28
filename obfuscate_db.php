@@ -9,7 +9,7 @@
  *
  * It adds salt to the hashes, which are otherwise trivial to reverse
  * (eg "f5bcaaa202075bfd3d33b9664f4191df, a12cb17654c0eb7332a42aa8413cc5dd" 
- * is "Fitzsimons, Jeanette"). This looks incomprehensible, but it only 
+ * is "Burgess, Chris"). This looks incomprehensible, but it only 
  * takes a list of common first/last names to deanonymise your DB.
  *
  * @TODO Generate pronounceable names.
