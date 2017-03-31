@@ -2,7 +2,13 @@
 
 A grab bag of SQL approaches to do something similar to what the extension provides. It won't be as fancy, but it'll probably be faster.
 
-This extension intentionally does not use a direct SQL approach. The motivation stems from an opinion that human testing / review will not be as effective or rigorous when the data being interacted with is obviously fake. It's possible to generate almost plausible names in SQL alone (see [#8](https://github.com/xurizaemon/org.civicrm.contrib.anonymize/issues/8)), but they will still look pretty fake, and the level of review will decrease. If the test data seems plausibly realistic, a human reviewer will be much more able to identify errors and anomalies.
+This extension is in the process of implementing a direct SQL approach. Each approach has merits:
+
+**Faker/API** - This approach generates better output. It's possible to generate almost plausible names in SQL alone (see [#8](https://github.com/xurizaemon/org.civicrm.contrib.anonymize/issues/8)), but they will still look pretty fake, and the level of review will decrease. If the test data seems plausibly realistic, a human reviewer will be much more able to identify errors and anomalies.
+
+**SQL** - SQL is faster. The speed of iterating API updates against each contact just doesn't compare to a bulk SQL update.
+
+A third approach is to reduce your test DB to a small subset, then use the "nice but slow" Faker/API approach to anonymize.
 
 ## obfuscate_db.php
 
