@@ -4,7 +4,7 @@ A grab bag of SQL approaches to do something similar to what the extension provi
 
 This extension is in the process of implementing a direct SQL approach. Each approach has merits:
 
-**Faker/API** - This approach generates better output. It's possible to generate almost plausible names in SQL alone (see [#8](https://github.com/xurizaemon/org.civicrm.contrib.anonymize/issues/8)), but they will still look pretty fake, and the level of review will decrease. If the test data seems plausibly realistic, a human reviewer will be much more able to identify errors and anomalies.
+**Faker/API** - This approach generates better output. It's possible to generate almost plausible names in SQL alone (see [#8](https://github.com/xurizaemon/org.civicrm.contrib.anonymize/issues/8)), but so far they are still kinda garbage, and this impedes human review - a human reviewer will be much more able to identify errors and anomalies with "human-looking" data.
 
 **SQL** - SQL is faster. The speed of iterating API updates against each contact just doesn't compare to a bulk SQL update.
 
