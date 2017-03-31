@@ -2,7 +2,7 @@
 
 A grab bag of SQL approaches to do something similar to what the extension provides. It won't be as fancy, but it'll probably be faster.
 
-This extension intentionally does not use a direct SQL approach. The motivation stems from an opinion that human testing / review will not be as effective or rigorous when the data being interacted with is obviously fake. It's possible to generate almost plausible names in SQL alone, but they will still look pretty fake, and the level of review will decrease. If the test data seems plausibly realistic, a human reviewer will be much more able to identify errors and anomalies.
+This extension intentionally does not use a direct SQL approach. The motivation stems from an opinion that human testing / review will not be as effective or rigorous when the data being interacted with is obviously fake. It's possible to generate almost plausible names in SQL alone (see [#8](https://github.com/xurizaemon/org.civicrm.contrib.anonymize/issues/8)), but they will still look pretty fake, and the level of review will decrease. If the test data seems plausibly realistic, a human reviewer will be much more able to identify errors and anomalies.
 
 ## obfuscate_db.php
 
