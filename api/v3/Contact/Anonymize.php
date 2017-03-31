@@ -86,3 +86,4 @@ function civicrm_api3_contact_anonymize($params) {
   }
   throw new API_Exception('Contact.Anonymize requires a contact ID', 1);
 }
+
