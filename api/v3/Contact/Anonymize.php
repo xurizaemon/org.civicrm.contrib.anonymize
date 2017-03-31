@@ -57,9 +57,8 @@ function civicrm_api3_contact_anonymize($params) {
     // Organization - then generate appropriate data.
     switch ($values['contact_type']) {
       case 'Individual':
-        $gender = Contact::genderMapCiviToFaker($values['gender_id']);
         $create_params = array(
-          'first_name' => $faker->firstName($gender),
+          'first_name' => $faker->firstName(),
           'last_name' => $faker->lastName(),
           'birth_date' => $faker->iso8601(rand(-10, -30) . ' years'),
           'email_greeting_display' => '',

@@ -11,6 +11,11 @@ class Contact {
   /**
    * Accept a CiviCRM gender ID and return a Faker gender string.
    *
+   * This was added to map Faker and Civi's different ways of denoting gender.
+   * But maybe we don't need to care about that, so it's removed from
+   * civicrm_api3_contact_anonymize() now (see commit), and perhaps this can go
+   * in future.
+   *
    * @param int|null $gender_id
    *   CiviCRM gender ID.
    *

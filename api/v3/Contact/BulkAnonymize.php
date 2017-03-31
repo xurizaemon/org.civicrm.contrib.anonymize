@@ -32,21 +32,22 @@ function civicrm_api3_contact_bulkanonymize($params) {
       $salt = md5(rand().microtime());
       $tables = array(
         'civicrm_contact' => array(
-          'first_name' => CRM_ENCRYPT,
-          'last_name' => CRM_ENCRYPT,
-          'organization_name' => CRM_ENCRYPT,
-          'household_name' => CRM_ENCRYPT,
-          'sort_name' => CRM_ENCRYPT,
-          'display_name' => CRM_SETNULL,
-          'legal_name' => CRM_SETNULL,
-          'addressee_display' => CRM_ENCRYPT,
-          'postal_greeting_custom' => CRM_ENCRYPT,
-          'email_greeting_display' => CRM_ENCRYPT,
-          'birth_date' => CRM_SETNULL,
+          'first_name' => CRM_ENCRYPT, // @TODO where individual
+          'last_name' => CRM_ENCRYPT, // @TODO where individual
+          'organization_name' => CRM_ENCRYPT, // @TODO where org
+          'household_name' => CRM_ENCRYPT, // @TODO ??
+          'sort_name' => CRM_ENCRYPT, // @todo postprocess
+          'display_name' => CRM_SETNULL, // @todo postprocess
+          'legal_name' => CRM_SETNULL, // @todo where org
+          'addressee_display' => CRM_ENCRYPT, // @todo postprocess
+          'postal_greeting_custom' => CRM_ENCRYPT, // @todo postprocess
+          'email_greeting_display' => CRM_ENCRYPT, // @todo postprocess
+          'birth_date' => CRM_SETNULL, // @todo individual only
           'source' => CRM_ENCRYPT,
-          'image_URL' => CRM_SETNULL,
+          'image_URL' => CRM_SETNULL, // @todo kitten api? faker?
         ),
         'civicrm_address' => array(
+          // @todo would be nice to make these look address-y
           'street_address' => CRM_ENCRYPT,
           'supplemental_address_1' => CRM_ENCRYPT,
           'supplemental_address_2' => CRM_ENCRYPT,
@@ -57,12 +58,15 @@ function civicrm_api3_contact_bulkanonymize($params) {
           'geo_code_2' => CRM_SETNULL,
         ),
         'civicrm_website' => array(
+          // @todo example.org and IDN variants? RFC 2606
           'url' => CRM_ENCRYPT,
         ),
         'civicrm_email' => array(
+          // @todo RFC2606
           'email' => CRM_ENCRYPT_EMAIL,
         ),
         'civicrm_phone' => array(
+          // @TODO numeric random
           'phone' => CRM_ENCRYPT,
         ),
       );
@@ -95,5 +99,8 @@ function civicrm_api3_contact_bulkanonymize($params) {
     case 'api':
       // Get all contacts via API. Iterate through and call
       // Contact.Anonymize([id => x]);
+      // - Count contacts in DB
+      // - Get contacts with that limit
+      // -
   }
 }
