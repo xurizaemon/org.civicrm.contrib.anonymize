@@ -39,7 +39,7 @@ class SQL {
   }
 
   /**
-   * Returns an SQL expression that generates a random date between within the
+   * Returns an SQL expression that generates a random date within the
    * specified bounds
    *
    * Dates can be specified as either a string like '2017-01-01' or 'now' or by
@@ -99,7 +99,8 @@ class SQL {
   }
 
   /**
-   * Returns SQL that produces a random string of characters.
+   * Returns an SQL expression that produces a random string of characters with
+   * a deterministic length as specified
    *
    * @param $case string What should the case of the returned string be?
    * Options are: 'lower', 'upper', or 'sentence'
@@ -126,7 +127,8 @@ class SQL {
   }
 
   /**
-   * Returns SQL that produces a random string of characters.
+   * Returns an SQL expression that produces a random string of characters of
+   * random length
    *
    * @param $case string What should the case of the returned string be?
    * Options are: 'lower' (default), 'upper', or 'sentence'
