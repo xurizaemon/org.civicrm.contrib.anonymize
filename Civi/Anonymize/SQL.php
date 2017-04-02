@@ -132,7 +132,8 @@ class SQL {
    * random length
    *
    * @param $case string What should the case of the returned string be?
-   * Options are: 'lower' (default), 'upper', or 'sentence'
+   * Options are: 'caps_none' (aka 'lower', 'caps_all' (aka 'upper'), and
+   * 'caps_first' (which is the default)
    *
    * @param $length int|array The minimum and maximum length of the string to
    * be generated
@@ -140,6 +141,8 @@ class SQL {
    * @return string
    */
   public static function randomString($case = 'caps_first', $length = array(3, 10)) {
+    $case = ($case == 'lower') ? 'caps_none' : $case;
+    $case = ($case == 'upper') ? 'caps_all' : $case;
     if (!is_array($length)) {
       $length = array($length, $length);
     }
@@ -167,12 +170,44 @@ class SQL {
     return "TRUNCATE TABLE $tableName";
   }
 
-  public static function updateField($table, $field, $value, $where = null) {
-    $whereClause = '';
+  /**
+   * Returns a complete SQL query to update one field in one table
+   *
+   * @param $table string the name of the table to update
+   * @param $field string the name of the field to update
+   * @param $value string an SQL expression to use as the new field value
+   * @param $where string an SQL expression to use within the WHERE clause. This
+   * should NOT begin with the word "WHERE"
+   * @return string
+   */
+  public static function updateField($table, $field, $value, $where = '') {
     if (!empty($where)) {
-      $whereClause = "\nWHERE $where";
+      $where = "\nWHERE $where";
     }
-    return "UPDATE $table\nSET $field = $value" . $whereClause;
+    return "UPDATE $table\nSET $field = $value" . $where;
+  }
+
+  /**
+   * Return an SQL expression which double-quotes whatever is supplied
+   *
+   * @param $string string
+   * @return string
+   */
+  public static function stringLiteral($string) {
+    return "\"$string\"";
+  }
+
+  /**
+   * Returns an SQL expression which concatenates all of the supplied values
+   *
+   * @return string
+   */
+  public static function concat() {
+    $args = func_get_args();
+    if (count($args) == 1) {
+      return $args;
+    }
+    else return "CONCAT(" . implode(', ', $args) . ")";
   }
 
 }

@@ -50,10 +50,16 @@ class FieldProcessor extends TableProcessor {
     $this->$method();
   }
 
+  protected function addSQLToUpateField($value) {
+    $this->addSQL(SQL::updateField($this->table, $this->field, $value));
+  }
+
 
   protected function clear() {
     $this->addSQL(array()); // @TODO
   }
+
+  // =============================== FAKE ==================================
 
   protected function fake_city() {
     $this->addSQL(array()); // @TODO
@@ -91,6 +97,8 @@ class FieldProcessor extends TableProcessor {
     $this->addSQL(array()); // @TODO
   }
 
+  // =============================== JUMBLE ==================================
+
   protected function jumble_all() {
     $this->addSQL(array()); // @TODO
   }
@@ -99,12 +107,21 @@ class FieldProcessor extends TableProcessor {
     $this->addSQL(array()); // @TODO
   }
 
+  // =============================== RANDOM ==================================
+
   protected function random_birth_date() {
-    $this->addSQL(array()); // @TODO
+    $now = new \DateTime();
+    $i = new \DateInterval('P80Y');
+    $start = $now->sub($i); // 80 years ago
+    $this->addSQLToUpateField(SQL::randomDate($start, $now));
   }
 
   protected function random_email() {
-    $this->addSQL(array()); // @TODO
+    $email = SQL::concat(
+      SQL::randomString('lower', array(6,15)),
+      SQL::stringLiteral('@example.org')
+    );
+    $this->addSQLToUpateField($email);
   }
 
   protected function random_foreign_key() {
@@ -116,7 +133,7 @@ class FieldProcessor extends TableProcessor {
   }
 
   protected function random_name() {
-    $this->addSQL(SQL::updateField($this->table, $this->field, SQL::randomString()));
+    $this->addSQLToUpateField(SQL::randomString());
   }
 
   protected function random_phone() {
@@ -132,7 +149,15 @@ class FieldProcessor extends TableProcessor {
   }
 
   protected function random_street_address() {
-    $this->addSQL(array()); // @TODO
+    $address = SQL::concat(
+      SQL::randomInteger(1, 99999),
+      SQL::stringLiteral(" "),
+      SQL::randomString('caps_first', array(5,9)),
+      SQL::stringLiteral(" "),
+      SQL::randomString('caps_first', array(2,3)),
+      SQL::stringLiteral(".")
+    );
+    $this->addSQLToUpateField($address);
   }
 
   protected function skip() {
