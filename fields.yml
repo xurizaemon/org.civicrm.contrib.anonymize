@@ -133,6 +133,7 @@ address:
     street_address:
       random: random_street_address
       fake: fake_street_address
+      jumble: random_street_address
 
     supplemental_address_1:
       random: random_name

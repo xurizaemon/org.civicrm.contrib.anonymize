@@ -103,7 +103,7 @@ class SQL {
    * a deterministic length as specified
    *
    * @param $case string What should the case of the returned string be?
-   * Options are: 'lower', 'upper', or 'sentence'
+   * Options are: 'caps_none', 'caps_all', 'caps_first'
    *
    * @param $length int The length of string to return
    *
@@ -112,16 +112,16 @@ class SQL {
    * @throws \Exception if case is invalid
    */
   private static function fixedLengthRandomString($case, $length) {
-    $cases = array('lower', 'upper', 'sentence');
+    $cases = array('caps_none', 'caps_all', 'caps_first');
     if (!in_array($case, $cases)) {
       throw new \Exception("Invalid string case $case."
         . "Options are: " . implode(', ', $cases));
     }
-    $firstChar = self::randomChar(($case == 'lower') ? 'lower' : 'upper');
-    $otherChars = self::randomChar(($case == 'upper') ? 'upper' : 'lower');
+    $firstChar = self::randomChar(($case == 'caps_none') ? 'lower' : 'upper');
+    $otherChars = self::randomChar(($case == 'caps_all') ? 'upper' : 'lower');
     $allChars = array_merge(
       array($firstChar),
-      array_fill(0, max($length) - 1, $otherChars)
+      array_fill(0, $length - 1, $otherChars)
     );
     return "CONCAT(" . implode(",\n    ", $allChars) . ")";
   }
@@ -138,7 +138,7 @@ class SQL {
    *
    * @return string
    */
-  public static function randomString($case = 'lower', $length = 10) {
+  public static function randomString($case = 'caps_first', $length = array(3, 10)) {
     if (!is_array($length)) {
       $length = array($length, $length);
     }
@@ -158,12 +158,20 @@ class SQL {
   /**
    * Returns SQL to truncate one table
    *
-   * @param $tableName the table to truncate
+   * @param $tableName string the table to truncate
    *
    * @return string
    */
   public static function truncate($tableName) {
     return "TRUNCATE TABLE $tableName";
+  }
+
+  public static function updateField($table, $field, $value, $where = null) {
+    $whereClause = '';
+    if (!empty($where)) {
+      $whereClause = "\nWHERE $where";
+    }
+    return "UPDATE $table\nSET $field = $value" . $whereClause;
   }
 
 }
