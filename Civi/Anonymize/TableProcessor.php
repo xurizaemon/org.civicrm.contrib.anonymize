@@ -63,6 +63,7 @@ class TableProcessor extends ConfigProcessor {
         $fieldProcessor = new FieldProcessor(
           $fieldConfig,
           $this->strategy,
+          $this->locale,
           $this->table,
           $fieldName,
           $this->getStipulations($fieldName)
