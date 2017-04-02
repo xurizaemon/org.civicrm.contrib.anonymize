@@ -1,0 +1,245 @@
+
+# ======================= CONTACT ============================
+
+contact:
+
+  clear:
+    - legal_identifier
+    - sic_code
+    - user_unique_id
+    - preferred_language
+    - external_identifier
+    - legal_name
+    - image_URL
+    - preferred_communication_method
+    - hash
+    - api_key
+    - source
+    - email_greeting_custom
+    - email_greeting_display
+    - postal_greeting_custom
+    - postal_greeting_display
+    - addressee_custom
+    - addressee_display
+    - formal_title
+
+  post_process:
+    - sort_name
+    - display_name
+    - else_name
+
+  stipulations:
+  
+    only_individual:
+      - nick_name
+      - first_name
+      - middle_name
+      - last_name
+      - prefix_id
+      - suffix_id
+
+    only_household:
+      - household_name
+
+    only_organization:
+      - organization_name
+    
+    sparse:
+      - nick_name
+      - middle_name
+      - prefix_id
+      - suffix_id
+      - gender_id
+      - is_deceased
+  
+  modify:
+  
+    nick_name:
+      random: random_name
+      fake: clear
+      jumble: skip # gets processed with first_name
+  
+    first_name:
+      random: random_name
+      fake: fake_first_name
+      jumble: jumble_first_nick_grouped
+      
+    middle_name:
+      random: random_name
+      fake: fake_first_name
+      jumble: jumble_all
+
+    last_name:
+      random: random_name
+      fake: fake_last_name
+      jumble: jumble_all
+
+    prefix_id: random_foreign_key
+
+    suffix_id: random_foreign_key
+  
+    job_title:
+      random: random_name
+      fake: fake_job_title
+      jumble: jumble_all
+
+    gender_id: random_foreign_key
+
+    birth_date: random_birth_date
+
+    is_deceased: random_is_deceased_and_date
+
+    deceased_date: skip # gets processed with is_deceased
+  
+    organization_name:
+      random: random_name
+      fake: fake_organization_name
+      jumble: random_name
+
+
+# ======================= ADDRESS ============================
+
+address:
+
+  clear:
+    - street_number
+    - street_number_suffix
+    - street_number_predirectional
+    - street_name
+    - street_type
+    - street_number_postdirectional
+    - street_unit
+    - supplemental_address_2
+    - supplemental_address_3
+    - county_id
+    - geo_code_1
+    - geo_code_2
+    - timezone
+    - name
+    - manual_geo_code
+    - usps_adc
+    - postal_code_suffix
+
+  post_process:
+    - country_id
+  
+  stipulations:
+  
+    sparse:
+      - supplemental_address_1
+
+  modify:
+
+    street_address:
+      random: random_street_address
+      fake: fake_street_address
+
+    supplemental_address_1:
+      random: random_name
+      fake: clear
+      jumble: jumble_all
+
+    city:
+      random: random_name
+      fake: fake_city
+      jumble: jumble_all
+
+    state_province_id: random_state_province_id
+
+    postal_code: random_postal_code
+
+
+# ======================= EMAIL ============================
+
+email:
+
+  clear:
+    - signature_text
+    - signature_html
+
+  modify:
+
+    email:
+      random: random_email
+      fake: fake_email
+      jumble: random_email
+
+
+# ======================= PHONE ============================
+
+phone:
+
+  clear:
+    - mobile_provider_id
+    - phone_ext
+    - phone_numeric
+
+  modify:
+
+    phone:
+      random: random_phone
+      fake: fake_phone
+      jumble: random_phone
+
+
+# ======================= IM ============================
+
+im: truncate
+
+
+# ======================= NOTE ============================
+
+note: truncate
+
+
+# ======================= OPENID ============================
+
+openid: truncate
+
+
+# ======================= WEBSITE ============================
+
+website: truncate
+
+
+# ======================= PAYMENT_PROCESSOR =================
+
+payment_processor:
+
+  clear:
+    - user_name
+    - password
+    - signature
+
+
+# ======================= PCP ===============================
+
+pcp:
+
+  modify:
+
+    title: random_name
+    intro_text: random_name
+    page_text: random_name
+    donate_link_text: fixed_string_donate_now
+
+
+# ======================= PERSISTENT ============================
+
+persistent: truncate
+
+
+# ======================= RELATIONSHIP ============================
+
+relationship:
+
+  clear:
+    - description
+
+
+# ======================= UF_MATCH ============================
+
+uf_match:
+
+  clear:
+    - uf_name  # this might cause problems, but err on safe side at first
