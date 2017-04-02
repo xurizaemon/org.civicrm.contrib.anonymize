@@ -155,4 +155,15 @@ class SQL {
     }
   }
 
+  /**
+   * Returns SQL to truncate one table
+   *
+   * @param $tableName the table to truncate
+   *
+   * @return string
+   */
+  public static function truncate($tableName) {
+    return "TRUNCATE TABLE $tableName";
+  }
+
 }
