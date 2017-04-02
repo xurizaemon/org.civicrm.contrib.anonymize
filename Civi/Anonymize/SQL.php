@@ -71,7 +71,8 @@ class SQL {
    * @return string
    */
   public static function randomInteger($min, $max) {
-    return "FLOOR($min + RAND() * $max + 1)";
+    $range = $max - $min + 1;
+    return "FLOOR($min + RAND() * $range)";
   }
 
   /**
