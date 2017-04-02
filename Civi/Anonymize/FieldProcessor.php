@@ -15,8 +15,14 @@ class FieldProcessor extends TableProcessor {
    */
   protected $stipulations;
 
-  public function __construct($config, $strategy, $tableName, $fieldName, $stipulations = array()) {
-    parent::__construct($config, $strategy, $tableName);
+  public function __construct(
+      $config,
+      $strategy,
+      $locale,
+      $tableName,
+      $fieldName,
+      $stipulations = array()) {
+    parent::__construct($config, $strategy, $locale, $tableName);
     $this->field = $fieldName;
     $this->stipulations = $stipulations;
   }

@@ -12,20 +12,24 @@ class ConfigProcessor {
   protected $queryQueue = array();
 
   /**
-   * @var string (e.g. "random", "jumble", etc)
+   * @var string (e.g. "random", "jumble", etc) passed in through API call
    */
   protected $strategy;
 
   /**
-   * Config from YAML
-   *
-   * @var array
+   * @var array Config from YAML
    */
   protected $config;
 
-  public function __construct($config, $strategy) {
+  /**
+   * @var string (e.g. "en_US") passed in through API call
+   */
+  protected $locale;
+
+  public function __construct($config, $strategy, $locale) {
     $this->config = $config;
     $this->strategy = $strategy;
+    $this->locale = $locale;
   }
 
   /**

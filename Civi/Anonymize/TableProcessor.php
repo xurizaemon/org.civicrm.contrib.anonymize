@@ -15,8 +15,8 @@ class TableProcessor extends ConfigProcessor {
    */
   private $stipulationsByField;
 
-  public function __construct($config, $strategy, $tableName) {
-    parent::__construct($config, $strategy);
+  public function __construct($config, $strategy, $locale, $tableName) {
+    parent::__construct($config, $strategy, $locale);
     $this->table = $tableName;
     $this->processStipulations();
   }

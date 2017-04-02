@@ -30,10 +30,13 @@ function _civicrm_api3_database_Anonymize_spec(&$spec) {
  * @see civicrm_api3_create_error
  */
 function civicrm_api3_database_Anonymize($params) {
-  $defaults = array('strategy' => 'random');
+  $defaults = array(
+    'strategy' => 'random',
+    'locale' => 'en_US',
+  );
   $params = array_merge($defaults, $params);
   $config = Yaml::parse(file_get_contents(FIELDS_CONFIG));
-  $processor = new ConfigProcessor($config, $params['strategy']);
+  $processor = new ConfigProcessor($config, $params['strategy'], $params['locale']);
   $processor->process();
   echo $processor->getSQLCombined();
 }
