@@ -143,7 +143,16 @@ class FieldProcessor extends TableProcessor {
   }
 
   protected function random_phone() {
-    $this->addSQL(array()); // @TODO
+    $patterns = array(
+      'en_US' => '\p\d\d-\p\d\d-\d\d\d\d',
+    );
+    if (empty($patterns[$this->locale])) {
+      $pattern = $patterns['en_US'];
+    }
+    else {
+      $pattern = $patterns[$this->locale];
+    }
+    $this->addSQLToUpateField(SQL::randomStringFromPattern($pattern));
   }
 
   protected function random_postal_code() {

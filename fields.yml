@@ -173,7 +173,6 @@ phone:
   clear:
     - mobile_provider_id
     - phone_ext
-    - phone_numeric
 
   modify:
 
@@ -181,6 +180,8 @@ phone:
       random: random_phone
       fake: fake_phone
       jumble: random_phone
+
+    phone_numeric: skip # gets processed with DB trigger from phone field
 
 
 # ======================= IM ============================

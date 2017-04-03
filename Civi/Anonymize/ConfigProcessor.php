@@ -85,7 +85,11 @@ class ConfigProcessor {
         $this->addSQL(SQL::truncate($tableName));
       }
       else {
-        $tableProcessor = new TableProcessor($tableConfig, $this->strategy, $tableName);
+        $tableProcessor = new TableProcessor(
+          $tableConfig,
+          $this->strategy,
+          $this->locale,
+          $tableName);
         $tableProcessor->process();
         $this->addSQL($tableProcessor->getQueries());
       }

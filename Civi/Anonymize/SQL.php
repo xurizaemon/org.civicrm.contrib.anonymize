@@ -72,31 +72,64 @@ class SQL {
    */
   public static function randomInteger($min, $max) {
     $range = $max - $min + 1;
-    return "FLOOR($min + RAND() * $range)";
+    $minString = ($min == 0) ? '' : "$min + ";
+    return "FLOOR({$minString}RAND() * $range)";
   }
 
   /**
    * Returns an SQL expression to generate one random character of the specified
    * type
    *
-   * @param $type string must be 'lower', 'upper', or 'digit'
+   * @param $type string a single-character code to define the character set
    * @return string
-   * @throws \Exception when type is invalid
+   * @throws \Exception if $type is not found
    */
   public static function randomChar($type) {
     $types = array(
-      'lower' => array('a', 'z'),
-      'upper' => array('A', 'Z'),
-      'digit' => array('0', '9'),
+      'l' => 'abcdefghijklmnoprstuvwy', // lower case letter
+      'u' => 'ABCDEFGHIJKLMNOPRSTUVWY', // upper case letter
+      'd' => '0123456789', // digit
+      'p' => '123456789', // positive digit
+      'e' => '0123456789abcdefghijklmnoprstuvwy', // email-like character
     );
     if (!array_key_exists($type, $types)) {
-      throw new \Exception("Invalid character type '{$type}'. "
-        . "Type must be one of: " . implode(', ', array_keys($types)));
+      throw new \Exception("Invalid character type code");
     }
-    $charCodeMin = ord($types[$type][0]);
-    $charCodeMax = ord($types[$type][1]);
-    $charCode = self::randomInteger($charCodeMin, $charCodeMax);
-    return "CHAR($charCode)";
+    $charSet = $types[$type];
+    $position = self::randomInteger(1, strlen($charSet));
+    $charSetSQL = self::stringLiteral($charSet);
+    return "SUBSTR($charSetSQL, $position, 1)";
+  }
+
+  /**
+   * Returns an SQL expression to generate one random string based on the
+   * supplied pattern. For example:
+   *   \p\d\d-\p\d\d-\d\d\d\d
+   * will return a US phone number
+   *
+   * Codes used within the pattern are defined in randomChar().
+   *
+   * @param $pattern string
+   *
+   * @return string
+   */
+  public static function randomStringFromPattern($pattern) {
+    // Isolate substrings like "\d" and "\l"
+    $parts = preg_split('#(\\\.)#', $pattern, NULL, PREG_SPLIT_DELIM_CAPTURE);
+    // Remove empty strings
+    $parts = array_filter($parts, function ($i) {
+      return !empty($i);
+    });
+    $result = array();
+    foreach ($parts as $part) {
+      try {
+        $result[] = self::randomChar(substr($part,1,1));
+      }
+      catch (\Exception $e) {
+        $result[] = self::stringLiteral($part);
+      }
+    }
+    return self::concat($result);
   }
 
   /**
@@ -118,13 +151,13 @@ class SQL {
       throw new \Exception("Invalid string case $case."
         . "Options are: " . implode(', ', $cases));
     }
-    $firstChar = self::randomChar(($case == 'caps_none') ? 'lower' : 'upper');
-    $otherChars = self::randomChar(($case == 'caps_all') ? 'upper' : 'lower');
+    $firstChar = self::randomChar(($case == 'caps_none') ? 'l' : 'u');
+    $otherChars = self::randomChar(($case == 'caps_all') ? 'u' : 'l');
     $allChars = array_merge(
       array($firstChar),
       array_fill(0, $length - 1, $otherChars)
     );
-    return "CONCAT(" . implode(",\n    ", $allChars) . ")";
+    return self::concat($allChars);
   }
 
   /**
@@ -198,16 +231,25 @@ class SQL {
   }
 
   /**
-   * Returns an SQL expression which concatenates all of the supplied values
+   * Returns an SQL expression which concatenates all of the supplied values.
+   * Values can be supplied as one array or separately
    *
    * @return string
    */
   public static function concat() {
+    // Get all supplied values, flattened
     $args = func_get_args();
-    if (count($args) == 1) {
-      return $args;
+    $values = array();
+    array_walk_recursive($args, function ($a) use (&$values) {
+      $values[] = $a;
+    });
+
+    // Only use CONCAT if we only have more than one value
+    if (count($values) == 1) {
+      return $values[0];
     }
-    else return "CONCAT(" . implode(', ', $args) . ")";
+
+    return "CONCAT(" . implode(", \n    ", $values) . ")";
   }
 
 }
