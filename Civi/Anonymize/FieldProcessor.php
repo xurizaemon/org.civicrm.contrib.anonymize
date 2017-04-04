@@ -56,10 +56,32 @@ class FieldProcessor extends TableProcessor {
     $this->$method();
   }
 
+  /**
+   * @param $value string an SQL expression used for the new value of the field
+   */
   protected function addSQLToUpateField($value) {
     $this->addSQL(SQL::updateField($this->table, $this->field, $value));
   }
 
+  /**
+   * Sorry this function name is so long!
+   *
+   * @param $patterns array Keys are locale strings. Values are patterns to be
+   * supplied to the SQL::
+   */
+  protected function addSQLUpdateFromLocaleBasedPatterns($patterns) {
+    if (empty($patterns[$this->locale])) {
+      $pattern = $patterns['en_US'];
+    }
+    else {
+      $pattern = $patterns[$this->locale];
+    }
+    $this->addSQLToUpateField(SQL::randomStringFromPattern($pattern));
+  }
+
+  // ======================================================================
+  //        Methods which are called based on per-field yaml config
+  // ======================================================================
 
   protected function clear() {
     $this->addSQL(array()); // @TODO
@@ -143,20 +165,15 @@ class FieldProcessor extends TableProcessor {
   }
 
   protected function random_phone() {
-    $patterns = array(
+    $this->addSQLUpdateFromLocaleBasedPatterns(array(
       'en_US' => '\p\d\d-\p\d\d-\d\d\d\d',
-    );
-    if (empty($patterns[$this->locale])) {
-      $pattern = $patterns['en_US'];
-    }
-    else {
-      $pattern = $patterns[$this->locale];
-    }
-    $this->addSQLToUpateField(SQL::randomStringFromPattern($pattern));
+    ));
   }
 
   protected function random_postal_code() {
-    $this->addSQL(array()); // @TODO
+    $this->addSQLUpdateFromLocaleBasedPatterns(array(
+      'en_US' => '\d\d\d\d\d',
+    ));
   }
 
   protected function random_state_province_id() {
