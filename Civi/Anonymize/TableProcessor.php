@@ -54,7 +54,13 @@ class TableProcessor extends ConfigProcessor {
   }
 
   protected function processClear() {
-    // @TODO
+    if (!empty($this->config['clear'])) {
+      $this->addSQL(SQL::updateFieldsToSameValue(
+          $this->table,
+          $this->config['clear'],
+          "NULL"
+      ));
+    }
   }
 
   protected function processModify() {

@@ -204,6 +204,45 @@ class SQL {
   }
 
   /**
+   * Returns a complete SQL query to update multiple fields in one table
+   *
+   * @param string $table the name of the table to update
+   * @param array $fieldValueMapping Keys are field names as strings. Values are
+   * SQL expressions (as strings) to use as the new value for the field
+   * @param string $where an SQL expression to use within the WHERE clause. This
+   * should NOT begin with the word "WHERE"
+   * @return string
+   */
+  public static function updateFields($table, $fieldValueMapping, $where = '') {
+    if (!empty($where)) {
+      $where = "\nWHERE $where";
+    }
+    $assignments = array();
+    foreach ($fieldValueMapping as $field => $value) {
+      $assignments[] = "\n  $field = $value";
+    }
+    $setClause = implode(',',$assignments);
+    return "UPDATE $table\nSET$setClause" . $where;
+  }
+
+  /**
+   * Returns a complete SQL query to update several field in one table and set
+   * them all to the same value
+   *
+   * @param string $table the name of the table to update
+   * @param array $fields strings (without keys) of field names
+   * @param string $value SQL expression to use as the new value for all the
+   * fields
+   * @param string $where an SQL expression to use within the WHERE clause. This
+   * should NOT begin with the word "WHERE"
+   * @return string
+   */
+  public static function updateFieldsToSameValue($table, $fields, $value, $where = '') {
+    $fieldValueMapping = array_fill_keys($fields, $value);
+    return self::updateFields($table, $fieldValueMapping, $where);
+  }
+
+  /**
    * Returns a complete SQL query to update one field in one table
    *
    * @param $table string the name of the table to update
@@ -214,10 +253,7 @@ class SQL {
    * @return string
    */
   public static function updateField($table, $field, $value, $where = '') {
-    if (!empty($where)) {
-      $where = "\nWHERE $where";
-    }
-    return "UPDATE $table\nSET $field = $value" . $where;
+    return self::updateFields($table, array($field => $value), $where);
   }
 
   /**
