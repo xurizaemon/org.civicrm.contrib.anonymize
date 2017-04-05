@@ -110,7 +110,7 @@ class FieldProcessor extends TableProcessor {
   // =============================== CLEAR =================================
 
   protected function clear() {
-    $this->addSQL(array()); // @TODO
+    $this->addSQLToUpdateField('NULL');
   }
 
   // ============================ FIXED STRING ==============================
