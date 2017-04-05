@@ -107,8 +107,16 @@ class FieldProcessor extends TableProcessor {
   //        Methods which are called based on per-field yaml config
   // ======================================================================
 
+  // =============================== CLEAR =================================
+
   protected function clear() {
     $this->addSQL(array()); // @TODO
+  }
+
+  // ============================ FIXED STRING ==============================
+
+  protected function fixed_string_donate_now() {
+    $this->addSQLToUpdateField(SQL::stringLiteral("Donate Now"));
   }
 
   // =============================== FAKE ==================================
@@ -142,10 +150,6 @@ class FieldProcessor extends TableProcessor {
   }
 
   protected function fake_street_address() {
-    $this->addSQL(array()); // @TODO
-  }
-
-  protected function fixed_string_donate_now() {
     $this->addSQL(array()); // @TODO
   }
 
