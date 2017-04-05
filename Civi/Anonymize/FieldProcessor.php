@@ -166,9 +166,10 @@ class FieldProcessor extends TableProcessor {
   // =============================== RANDOM ==================================
 
   protected function random_birth_date() {
+    $start = new \DateTime();
+    $start->sub(new \DateInterval('P80Y')); // shift back 80 years
     $now = new \DateTime();
-    $i = new \DateInterval('P80Y');
-    $start = $now->sub($i); // 80 years ago
+    $now->sub(new \DateInterval('P1Y')); // shift back 1 year
     $this->addSQLToUpdateField(SQL::randomDate($start, $now));
   }
 
