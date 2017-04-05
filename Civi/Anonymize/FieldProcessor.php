@@ -59,7 +59,7 @@ class FieldProcessor extends TableProcessor {
   /**
    * @param $value string an SQL expression used for the new value of the field
    */
-  protected function addSQLToUpateField($value) {
+  protected function addSQLToUpdateField($value) {
     $this->addSQL(SQL::updateField($this->table, $this->field, $value));
   }
 
@@ -76,7 +76,7 @@ class FieldProcessor extends TableProcessor {
     else {
       $pattern = $patterns[$this->locale];
     }
-    $this->addSQLToUpateField(SQL::randomStringFromPattern($pattern));
+    $this->addSQLToUpdateField(SQL::randomStringFromPattern($pattern));
   }
 
   // ======================================================================
@@ -141,7 +141,7 @@ class FieldProcessor extends TableProcessor {
     $now = new \DateTime();
     $i = new \DateInterval('P80Y');
     $start = $now->sub($i); // 80 years ago
-    $this->addSQLToUpateField(SQL::randomDate($start, $now));
+    $this->addSQLToUpdateField(SQL::randomDate($start, $now));
   }
 
   protected function random_email() {
@@ -149,7 +149,7 @@ class FieldProcessor extends TableProcessor {
       SQL::randomString('lower', array(6,15)),
       SQL::stringLiteral('@example.org')
     );
-    $this->addSQLToUpateField($email);
+    $this->addSQLToUpdateField($email);
   }
 
   protected function random_foreign_key() {
@@ -161,7 +161,7 @@ class FieldProcessor extends TableProcessor {
   }
 
   protected function random_name() {
-    $this->addSQLToUpateField(SQL::randomString());
+    $this->addSQLToUpdateField(SQL::randomString());
   }
 
   protected function random_phone() {
@@ -189,7 +189,7 @@ class FieldProcessor extends TableProcessor {
       SQL::randomString('caps_first', array(2,3)),
       SQL::stringLiteral(".")
     );
-    $this->addSQLToUpateField($address);
+    $this->addSQLToUpdateField($address);
   }
 
   protected function skip() {
