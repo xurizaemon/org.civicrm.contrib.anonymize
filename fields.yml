@@ -47,9 +47,11 @@ contact:
     sparse:
       - nick_name
       - middle_name
+      - gender_id
+
+    super_sparse:
       - prefix_id
       - suffix_id
-      - gender_id
       - is_deceased
   
   modify:

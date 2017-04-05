@@ -209,20 +209,23 @@ class SQL {
    * @param string $table the name of the table to update
    * @param array $fieldValueMapping Keys are field names as strings. Values are
    * SQL expressions (as strings) to use as the new value for the field
-   * @param string $where an SQL expression to use within the WHERE clause. This
-   * should NOT begin with the word "WHERE"
+   * @param array $where an array of strings for SQL expressions to use within
+   * the WHERE clause. (e.g. "is_deleted != 1")
    * @return string
    */
-  public static function updateFields($table, $fieldValueMapping, $where = '') {
+  public static function updateFields($table, $fieldValueMapping, $where = array()) {
+    $where = is_array($where) ? $where : array($where);
+    $where = array_filter($where);
+    $whereClause = '';
     if (!empty($where)) {
-      $where = "\nWHERE $where";
+      $whereClause = "\nWHERE\n" . implode(" AND\n", $where);
     }
     $assignments = array();
     foreach ($fieldValueMapping as $field => $value) {
       $assignments[] = "\n  $field = $value";
     }
     $setClause = implode(',',$assignments);
-    return "UPDATE $table\nSET$setClause" . $where;
+    return "UPDATE {$table}\nSET{$setClause}{$whereClause}";
   }
 
   /**
@@ -233,11 +236,11 @@ class SQL {
    * @param array $fields strings (without keys) of field names
    * @param string $value SQL expression to use as the new value for all the
    * fields
-   * @param string $where an SQL expression to use within the WHERE clause. This
-   * should NOT begin with the word "WHERE"
+   * @param array $where an array of strings for SQL expressions to use within
+   * the WHERE clause. (e.g. "is_deleted != 1")
    * @return string
    */
-  public static function updateFieldsToSameValue($table, $fields, $value, $where = '') {
+  public static function updateFieldsToSameValue($table, $fields, $value, $where = array()) {
     $fieldValueMapping = array_fill_keys($fields, $value);
     return self::updateFields($table, $fieldValueMapping, $where);
   }
@@ -248,11 +251,11 @@ class SQL {
    * @param $table string the name of the table to update
    * @param $field string the name of the field to update
    * @param $value string an SQL expression to use as the new field value
-   * @param $where string an SQL expression to use within the WHERE clause. This
-   * should NOT begin with the word "WHERE"
+   * @param array $where an array of strings for SQL expressions to use within
+   * the WHERE clause. (e.g. "is_deleted != 1")
    * @return string
    */
-  public static function updateField($table, $field, $value, $where = '') {
+  public static function updateField($table, $field, $value, $where = array()) {
     return self::updateFields($table, array($field => $value), $where);
   }
 

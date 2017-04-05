@@ -10,10 +10,10 @@ class FieldProcessor extends TableProcessor {
   protected $field;
 
   /**
-   * @var array of string for special things that need to be done when
-   * processing this field (e.g. "sparse")
+   * @var array of strings for conditions to use in the WHERE clause of any
+   * updates we do to this field
    */
-  protected $stipulations;
+  protected $whereConditions = array();
 
   public function __construct(
       $config,
@@ -24,7 +24,31 @@ class FieldProcessor extends TableProcessor {
       $stipulations = array()) {
     parent::__construct($config, $strategy, $locale, $tableName);
     $this->field = $fieldName;
-    $this->stipulations = $stipulations;
+    $this->setWhereConditions($stipulations);
+  }
+
+  /**
+   * @param array $stipulations No keys. Values are strings to represent special
+   * handling needed for this field.
+   * @throws \Exception if there are any unrecognized stipulations
+   */
+  protected function setWhereConditions($stipulations) {
+    $conditions = array(
+      'only_individual' => 'contact_type = "Individual"',
+      'only_household' => 'contact_type = "Household"',
+      'only_organization' => 'contact_type = "Organization"',
+      'sparse' => 'rand() < 0.10',
+      'super_sparse' => 'rand() < 0.01',
+    );
+    foreach ($stipulations as $stipulation) {
+      if (!empty($conditions[$stipulation])) {
+        $this->whereConditions[] = $conditions[$stipulation];
+      }
+      else {
+        throw new \Exception("Stipulation '$stipulation' defined for " .
+          "table '{$this->table}' is not recognized.");
+      }
+    }
   }
 
   /**
@@ -60,7 +84,7 @@ class FieldProcessor extends TableProcessor {
    * @param $value string an SQL expression used for the new value of the field
    */
   protected function addSQLToUpdateField($value) {
-    $this->addSQL(SQL::updateField($this->table, $this->field, $value));
+    $this->addSQL(SQL::updateField($this->table, $this->field, $value, $this->whereConditions));
   }
 
   /**

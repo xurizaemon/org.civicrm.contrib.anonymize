@@ -25,7 +25,16 @@ class TableProcessor extends ConfigProcessor {
    * Take stipulations array from YAML and transpose it
    */
   protected function processStipulations() {
-    $this->stipulationsByField = array(); // @TODO
+    $result = [];
+    if (!empty($this->config['stipulations'])) {
+      foreach ($this->config['stipulations'] as $stipulation => $fields) {
+        $result = array_merge_recursive(
+            $result,
+            array_fill_keys($fields, array($stipulation))
+        );
+      }
+    }
+    $this->stipulationsByField = $result;
   }
 
   /**
