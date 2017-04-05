@@ -2,12 +2,17 @@
 
 namespace Civi\Anonymize;
 
-class TableProcessor extends ConfigProcessor {
+class TableProcessor extends Processor {
 
   /**
    * @var string the name of the database table
    */
-  protected $table;
+  private $table;
+
+  /**
+   * @var array the configuration (from yaml file) for the specific table
+   */
+  private $tableConfig = array();
 
   /**
    * @var array where each element has a field name as the key and an array of
@@ -15,26 +20,57 @@ class TableProcessor extends ConfigProcessor {
    */
   private $stipulationsByField;
 
-  public function __construct($config, $strategy, $locale, $tableName) {
-    parent::__construct($config, $strategy, $locale);
+  /**
+   * @var array of strings (without keys) for the names of fields to set to null
+   */
+  private $clear = array();
+
+  /**
+   * TableProcessor constructor.
+   * @param string $strategy
+   * @param string $locale
+   * @param string $tableName
+   * @param array $tableConfig
+   */
+  public function __construct($strategy, $locale, $tableName, $tableConfig) {
+    $defaults = array(
+      'clear' => array(),
+      'post_process' => array(),
+      'stipulations' => array(),
+      'modify' => array(),
+    );
+    $this->tableConfig = array_merge($defaults, $tableConfig);
+    parent::__construct($strategy, $locale);
     $this->table = $tableName;
-    $this->processStipulations();
+    $this->configureStipulations();
+    $this->configureClear();
   }
 
   /**
    * Take stipulations array from YAML and transpose it
    */
-  protected function processStipulations() {
+  private function configureStipulations() {
     $result = [];
-    if (!empty($this->config['stipulations'])) {
-      foreach ($this->config['stipulations'] as $stipulation => $fields) {
-        $result = array_merge_recursive(
-            $result,
-            array_fill_keys($fields, array($stipulation))
-        );
-      }
+    foreach ($this->tableConfig['stipulations'] as $stipulation => $fields) {
+      $result = array_merge_recursive(
+        $result,
+        array_fill_keys($fields, array($stipulation))
+      );
     }
     $this->stipulationsByField = $result;
+  }
+
+  /**
+   * Take the "clear" setting from yaml, add every field we are going to modify
+   * because it's helpful to clear them first. Why? Because some of the fields
+   * we modify get "sparse" values, meaning only set in some places. It's
+   * easiest to just clear everything first.
+   */
+  private function configureClear() {
+    $this->clear = array_merge(
+        $this->tableConfig['clear'],
+        array_keys($this->tableConfig['modify'])
+    );
   }
 
   /**
@@ -63,29 +99,25 @@ class TableProcessor extends ConfigProcessor {
   }
 
   protected function processClear() {
-    if (!empty($this->config['clear'])) {
-      $this->addSQL(SQL::updateFieldsToSameValue(
-          $this->table,
-          $this->config['clear'],
-          "NULL"
-      ));
-    }
+    $this->addSQL(SQL::updateFieldsToSameValue(
+        $this->table,
+        $this->clear,
+        "NULL"
+    ));
   }
 
   protected function processModify() {
-    if (!empty($this->config['modify'])) {
-      foreach ($this->config['modify'] as $fieldName => $fieldConfig) {
-        $fieldProcessor = new FieldProcessor(
-          $fieldConfig,
+    foreach ($this->tableConfig['modify'] as $fieldName => $fieldConfig) {
+      $fieldProcessor = new FieldProcessor(
           $this->strategy,
           $this->locale,
           $this->table,
           $fieldName,
+          $fieldConfig,
           $this->getStipulations($fieldName)
-        );
-        $fieldProcessor->process();
-        $this->addSQL($fieldProcessor->getQueries());
-      }
+      );
+      $fieldProcessor->process();
+      $this->addSQL($fieldProcessor->getQueries());
     }
   }
 

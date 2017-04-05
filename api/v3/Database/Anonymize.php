@@ -36,7 +36,7 @@ function civicrm_api3_database_Anonymize($params) {
   );
   $params = array_merge($defaults, $params);
   $config = Yaml::parse(file_get_contents(FIELDS_CONFIG));
-  $processor = new ConfigProcessor($config, $params['strategy'], $params['locale']);
+  $processor = new ConfigProcessor($params['strategy'], $params['locale'], $config);
   $processor->process();
   echo $processor->getSQLCombined();
 }

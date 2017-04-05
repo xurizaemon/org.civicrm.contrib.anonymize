@@ -2,28 +2,49 @@
 
 namespace Civi\Anonymize;
 
-class FieldProcessor extends TableProcessor {
+class FieldProcessor extends Processor {
+
+  /**
+   * @var string the name of the database table
+   */
+  private $table;
 
   /**
    * @var string the name of this field in the database
    */
-  protected $field;
+  private $field;
+
+  /**
+   * @var array config from yaml for this specific field
+   */
+  private $fieldConfig;
 
   /**
    * @var array of strings for conditions to use in the WHERE clause of any
    * updates we do to this field
    */
-  protected $whereConditions = array();
+  private $whereConditions = array();
 
+  /**
+   * FieldProcessor constructor.
+   * @param string $strategy
+   * @param string $locale
+   * @param string $tableName
+   * @param string $fieldName
+   * @param array $fieldConfig
+   * @param array $stipulations
+   */
   public function __construct(
-      $config,
       $strategy,
       $locale,
       $tableName,
       $fieldName,
+      $fieldConfig,
       $stipulations = array()) {
-    parent::__construct($config, $strategy, $locale, $tableName);
+    parent::__construct($strategy, $locale);
+    $this->table = $tableName;
     $this->field = $fieldName;
+    $this->fieldConfig = $fieldConfig;
     $this->setWhereConditions($stipulations);
   }
 
@@ -59,16 +80,16 @@ class FieldProcessor extends TableProcessor {
    * @throws \Exception if no method is defined for the defined strategy
    */
   protected function methodToUse() {
-    if (is_string($this->config)) {
-      return $this->config;
+    if (is_string($this->fieldConfig)) {
+      return $this->fieldConfig;
     }
     else {
-      if (empty($this->config[$this->strategy])) {
+      if (empty($this->fieldConfig[$this->strategy])) {
         throw new \Exception("Strategy: {$this->strategy} is not " .
           "defined for table: {$this->table} field: {$this->field}");
       }
       else {
-        return $this->config[$this->strategy];
+        return $this->fieldConfig[$this->strategy];
       }
     }
   }
