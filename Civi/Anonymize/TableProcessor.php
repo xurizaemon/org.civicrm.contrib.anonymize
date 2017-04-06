@@ -108,7 +108,7 @@ class TableProcessor extends Processor {
 
   protected function processModify() {
     foreach ($this->tableConfig['modify'] as $fieldName => $fieldConfig) {
-      $fieldProcessor = new FieldProcessor(
+      $processor = new FieldModifyProcessor(
           $this->strategy,
           $this->locale,
           $this->table,
@@ -116,13 +116,22 @@ class TableProcessor extends Processor {
           $fieldConfig,
           $this->getStipulations($fieldName)
       );
-      $fieldProcessor->process();
-      $this->addSQL($fieldProcessor->getQueries());
+      $processor->process();
+      $this->addSQL($processor->getQueries());
     }
   }
 
   protected function processPost() {
-    // @TODO
+    foreach ($this->tableConfig['post_process'] as $fieldName) {
+      $processor = new FieldPostProcessor(
+          $this->strategy,
+          $this->locale,
+          $this->table,
+          $fieldName
+      );
+      $processor->process();
+      $this->addSQL($processor->getQueries());
+    }
   }
 
 }

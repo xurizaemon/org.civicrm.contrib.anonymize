@@ -26,7 +26,6 @@ contact:
   post_process:
     - sort_name
     - display_name
-    - else_name
 
   stipulations:
   
