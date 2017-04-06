@@ -1,0 +1,14 @@
+SET @most_common_country_id = coalesce(
+  (
+    SELECT country_id
+    FROM civicrm_address
+    GROUP BY country_id
+    ORDER BY count(*) DESC
+    LIMIT 1
+  ),
+  (
+    SELECT id
+    FROM civicrm_country
+    WHERE name = "United States"
+  )
+);

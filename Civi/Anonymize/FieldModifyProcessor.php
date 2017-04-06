@@ -185,7 +185,16 @@ class FieldModifyProcessor extends FieldProcessor {
   }
 
   protected function random_state_province_id() {
-    $this->addSQL(array()); // @TODO
+    $this->addSQL(SQL::renderFromTemplate('set_most_common_country_id'));
+    $select = "SELECT id 
+      FROM civicrm_state_province 
+      WHERE country_id = @most_common_country_id";
+    $this->addSQL(SQL::updateFieldsFromRandomChoice(
+        $this->table,
+        array($this->field => 'int(10)'),
+        $select,
+        array("$this->field IS NOT NULL")
+    ));
   }
 
   protected function random_street_address() {

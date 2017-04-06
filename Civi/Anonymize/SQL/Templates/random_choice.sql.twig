@@ -1,0 +1,42 @@
+DROP TEMPORARY TABLE IF EXISTS choice;
+CREATE TEMPORARY TABLE choice (
+  id INT(10) NOT NULL AUTO_INCREMENT,
+  {% for field_name, field_type in fields -%}
+    {{ field_name }} {{ field_type }} NOT NULL,
+  {% endfor -%}
+  {% for field_name, field_type in fields -%}
+    INDEX({{ field_name }}),
+  {% endfor -%}
+  PRIMARY KEY (id)
+);
+
+INSERT INTO choice ({{ fields|keys|join(', ') }})
+{{ select_choices }};
+
+SET @choices_count = (
+  SELECT count(*)
+  FROM choice);
+
+DROP TEMPORARY TABLE IF EXISTS mapping;
+CREATE TEMPORARY TABLE mapping (
+  entity_id INT(10) NOT NULL,
+  choice_id int(10),
+  UNIQUE INDEX (entity_id),
+  INDEX (choice_id)
+);
+
+INSERT INTO mapping
+SELECT
+  id,
+  floor(1 + rand() * @choices_count)
+FROM {{ table }}{{ update_where }};
+
+UPDATE {{ table }}
+  JOIN mapping ON mapping.entity_id = {{ table }}.id
+  JOIN choice ON choice.id = mapping.choice_id
+SET
+  {% for field_name, field_type in fields -%}
+    {{ table }}.{{ field_name }} = choice.{{ field_name }},
+  {% endfor -%}
+  {{ table }}.id = {{ table }}.id;
+  {# id is just here to make it easier to put commas in all the SET statements #}

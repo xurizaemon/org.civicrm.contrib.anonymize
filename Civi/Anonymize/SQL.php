@@ -4,6 +4,12 @@ namespace Civi\Anonymize;
 
 use \DateTime;
 
+use \Twig_Environment;
+use \Twig_Loader_Filesystem;
+
+
+define(SQL_TEMPLATE_DIR, __DIR__ . '/SQL/Templates');
+
 /**
  * A collection of functions which produce SQL code to do things like generate
  * random values
@@ -204,6 +210,24 @@ class SQL {
   }
 
   /**
+   * Returns an SQL "WHERE" clause expression which includes the word "WHERE"
+   *
+   * @param array $whereConditions array of string (without keys) for SQL
+   * expressions to use within the WHERE clause. (e.g. "is_deleted != 1")
+   * @return string
+   */
+  public static function whereClause($whereConditions = array()) {
+    $where = is_array($whereConditions) ? $whereConditions : array($whereConditions);
+    $where = array_filter($where); // remove empty items
+    if (!empty($where)) {
+      return "\nWHERE\n" . implode(" AND\n", $where);
+    }
+    else {
+      return '';
+    }
+  }
+
+  /**
    * Returns a complete SQL query to update multiple fields in one table
    *
    * @param string $table the name of the table to update
@@ -214,16 +238,11 @@ class SQL {
    * @return string
    */
   public static function updateFields($table, $fieldValueMapping, $where = array()) {
-    $where = is_array($where) ? $where : array($where);
-    $where = array_filter($where);
-    $whereClause = '';
-    if (!empty($where)) {
-      $whereClause = "\nWHERE\n" . implode(" AND\n", $where);
-    }
     $assignments = array();
     foreach ($fieldValueMapping as $field => $value) {
       $assignments[] = "\n  $field = $value";
     }
+    $whereClause = self::whereClause($where);
     $setClause = implode(',',$assignments);
     return "UPDATE {$table}\nSET{$setClause}{$whereClause}";
   }
@@ -289,6 +308,38 @@ class SQL {
     }
 
     return "CONCAT(" . implode(", \n    ", $values) . ")";
+  }
+
+  /**
+   * @param string $templateName
+   * @param array $replacements
+   * @return string
+   */
+  public static function renderFromTemplate($templateName, $replacements = array()) {
+    $loader = new Twig_Loader_Filesystem(SQL_TEMPLATE_DIR);
+    $twig = new Twig_Environment($loader);
+    return $twig->render("$templateName.sql.twig", $replacements);
+  }
+
+  /**
+   * @param string $table
+   * @param array $fieldsDefinition
+   * @param string $selectChoices
+   * @param array $updateWhere array of strings (without keys) which are each
+   * valid conditions to be used withing an SQL WHERE clause.
+   * @return string
+   */
+  public static function updateFieldsFromRandomChoice(
+      $table,
+      $fieldsDefinition,
+      $selectChoices,
+      $updateWhere) {
+    return self::renderFromTemplate('random_choice', array(
+      'table' => $table,
+      'fields' => $fieldsDefinition,
+      'select_choices' => $selectChoices,
+      'update_where' => SQL::whereClause($updateWhere),
+    ));
   }
 
 }
