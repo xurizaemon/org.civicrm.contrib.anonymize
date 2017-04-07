@@ -1,0 +1,37 @@
+DROP TEMPORARY TABLE IF EXISTS household_name;
+CREATE TEMPORARY TABLE household_name (
+  contact_id INT(10) NOT NULL,
+  household_name char(200),
+  UNIQUE INDEX(contact_id) );
+INSERT INTO household_name
+  SELECT
+    household.id,
+    IF( COUNT(*) > 1,
+      GROUP_CONCAT(
+        DISTINCT
+        CONCAT(
+          related_individual.first_name, " ",
+          related_individual.last_name
+        )
+        ORDER BY related_individual.last_name
+        SEPARATOR ' and '
+      ),
+      CONCAT(
+        related_individual.first_name, " ",
+        related_individual.last_name, " Household"
+      )
+    )
+  FROM civicrm_contact household
+  JOIN civicrm_relationship rel ON
+    rel.contact_id_b = household.id
+  JOIN civicrm_contact related_individual ON
+    related_individual.id = rel.contact_id_a
+  WHERE
+    household.contact_type = 'Household' AND
+    related_individual.contact_type = 'Individual'
+  GROUP BY household.id;
+
+UPDATE civicrm_contact contact
+JOIN household_name ON
+  household_name.contact_id = contact.id
+SET contact.household_name = household_name.household_name;

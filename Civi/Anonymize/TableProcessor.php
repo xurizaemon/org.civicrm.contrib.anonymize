@@ -99,6 +99,7 @@ class TableProcessor extends Processor {
   }
 
   protected function processClear() {
+    $this->addSQLComment("Clearing fields for {$this->table}");
     $this->addSQL(SQL::updateFieldsToSameValue(
         $this->table,
         $this->clear,

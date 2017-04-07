@@ -72,7 +72,7 @@ class FieldPostProcessor extends FieldProcessor {
   }
 
   protected function contact__household_name() {
-    // @TODO set household name based on related individuals
+    $this->addSQL(SQL::renderFromTemplate('update_household_name'));
   }
 
   protected function address__country_id() {

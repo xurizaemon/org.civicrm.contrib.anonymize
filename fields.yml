@@ -101,6 +101,11 @@ contact:
       fake: fake_organization_name
       jumble: random_name
 
+    household_name:
+      random: random_name
+      fake: fake_household_name
+      jumble: random_name
+
 
 # ======================= ADDRESS ============================
 
