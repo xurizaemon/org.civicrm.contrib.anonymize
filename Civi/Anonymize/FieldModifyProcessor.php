@@ -147,9 +147,9 @@ class FieldModifyProcessor extends FieldProcessor {
   protected function random_birth_date() {
     $start = new \DateTime();
     $start->sub(new \DateInterval('P80Y')); // shift back 80 years
-    $now = new \DateTime();
-    $now->sub(new \DateInterval('P1Y')); // shift back 1 year
-    $this->addSQLToUpdateField(SQL::randomDate($start, $now));
+    $end = new \DateTime();
+    $end->sub(new \DateInterval('P1Y')); // shift back 1 year
+    $this->addSQLToUpdateField(SQL::randomDate($start, $end));
   }
 
   protected function random_email() {
@@ -165,7 +165,18 @@ class FieldModifyProcessor extends FieldProcessor {
   }
 
   protected function random_is_deceased_and_date() {
-    $this->addSQL(array()); // @TODO
+    // Update is_deceased, setting to 1 (which should be done sparsely, as
+    // defined in the yaml
+    $this->addSQLToUpdateField(1);
+    // Update deceased_date, setting to a random value for *some* of the rows
+    // where is_deceased = 1
+    $start = new \DateTime();
+    $start->sub(new \DateInterval('P20Y')); // shift back 80 years
+    $end = new \DateTime();
+    $end->sub(new \DateInterval('P1Y')); // shift back 1 year
+    $this->addSQL(SQL::renderFromTemplate('update_deceased_date', array(
+      'date' => SQL::randomDate($start, $end)
+    )));
   }
 
   protected function random_name() {

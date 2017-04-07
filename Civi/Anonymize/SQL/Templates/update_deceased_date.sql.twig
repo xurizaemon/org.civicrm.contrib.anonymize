@@ -1,0 +1,5 @@
+update civicrm_contact
+set deceased_date = {{ date }}
+where
+  is_deceased = 1 AND
+  RAND() < 0.5;
