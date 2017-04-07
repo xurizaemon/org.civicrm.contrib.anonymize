@@ -24,6 +24,7 @@ contact:
     - formal_title
 
   post_process:
+    - household_name
     - sort_name
     - display_name
 
@@ -36,6 +37,9 @@ contact:
       - last_name
       - prefix_id
       - suffix_id
+      - job_title
+      - birth_date
+      - gender_id
 
     only_household:
       - household_name
