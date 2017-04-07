@@ -24,24 +24,23 @@ There is no guarantee or warranty with this extension. If you've made a custom f
 
 ## Installation
 
-There's no release yet, which means you need to clone the git repo and then run `composer install`.
+There's no release yet, which means you need to clone the git repo and then use `composer update`. 
 
 ## How to use
 
 Congratulations, you made it past the pseudolegal boilerplate! Sorry if that freaked you out.
 
-Examples below use Drush, but you can of course use any CiviCRM API interface you prefer.
+Examples below use [`cv`](https://github.com/civicrm/cv), but you can of course use any CiviCRM API interface you prefer: `drush`, `wp-cli`, `civicrm/api/explorer` ...
 
 ### Bulk anonymization
 
 This command will anonymize the entire database, based on default settings.
 
-    cv api database.anonymize
+    cv api Database.anonymize
     
 This command will print all the SQL queries that *would* run, but it won't run them. If you like, you can pipe this output to `mysql` or redirect it to a file for running later.
 
-    cv api database.anonymize --out=none dry-run=1
-
+    cv api Database.anonymize --out=none dry-run=1
 
 ### Piecemeal anonymization
 
