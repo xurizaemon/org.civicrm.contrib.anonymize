@@ -1,0 +1,4 @@
+update civicrm_address a
+join civicrm_state_province s on
+  s.id = a.state_province_id
+set a.country_id = s.country_id;

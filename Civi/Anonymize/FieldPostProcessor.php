@@ -71,8 +71,12 @@ class FieldPostProcessor extends FieldProcessor {
     );
   }
 
+  protected function contact__household_name() {
+    // @TODO set household name based on related individuals
+  }
+
   protected function address__country_id() {
-    // @TODO
+    $this->addSQL(SQL::renderFromTemplate('update_address_country_id'));
   }
 
 }

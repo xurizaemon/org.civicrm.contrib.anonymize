@@ -196,8 +196,7 @@ class FieldModifyProcessor extends FieldProcessor {
     $this->addSQL(SQL::updateFieldsFromRandomChoice(
         $this->table,
         array($this->field => 'int(10)'),
-        $select,
-        array("$this->field IS NOT NULL")
+        $select
     ));
   }
 

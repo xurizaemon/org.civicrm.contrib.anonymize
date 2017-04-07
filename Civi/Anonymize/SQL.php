@@ -374,7 +374,7 @@ class SQL {
       $table,
       $fieldsDefinition,
       $selectChoices,
-      $updateWhere) {
+      $updateWhere = array()) {
     return self::renderFromTemplate('random_choice', array(
       'table' => $table,
       'fields' => $fieldsDefinition,
