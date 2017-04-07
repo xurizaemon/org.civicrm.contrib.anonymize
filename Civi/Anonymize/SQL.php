@@ -206,7 +206,7 @@ class SQL {
    * @return string
    */
   public static function truncate($tableName) {
-    return "TRUNCATE TABLE $tableName";
+    return "DELETE FROM $tableName";
   }
 
   /**
@@ -286,6 +286,46 @@ class SQL {
    */
   public static function stringLiteral($string) {
     return "\"$string\"";
+  }
+
+  /**
+   * Ensures that the supplied query has a semicolon
+   * @param string $query
+   * @return string
+   */
+  public static function prepareQuery($query) {
+    $query = trim($query, " \n;");
+    $query = empty($query) ? "" : "$query;";
+    return $query;
+  }
+
+  /**
+   * Split up one string with multiple queries into separate strings, each
+   * containing one query. The logic here is VERY primitive. We split any time
+   * we see a semicolon. This means that if a semicolon occurs within a string
+   * in an SQL expression, then this function will not split it correctly :(
+   *
+   * @param string $queries
+   * @return array of strings (without keys) where each one is an SQL query with
+   * a semicolon. Even if only one query is supplied, it will still be returned
+   * within an array
+   */
+  public static function splitQueries($queries) {
+    $result = explode(';', $queries);
+    $result = array_map(array('self', 'prepareQuery'), $result);
+    $result = array_filter($result);
+    return $result;
+  }
+
+  /**
+   * Test whether or not some SQL is a comment. Currently, it only recognizes
+   * comments which begin with two dashes.
+   *
+   * @param string $query
+   * @return boolean
+   */
+  public static function isComment($query) {
+    return (boolean) preg_match('/^--/', $query);
   }
 
   /**

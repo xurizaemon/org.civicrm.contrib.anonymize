@@ -38,12 +38,12 @@ class Processor {
    * array of such queries). The semicolon can be present or not.
    */
   protected function addSQL($sql) {
-    if (!is_array($sql)) {
-      $sql = array($sql);
-    }
+    $sql = is_array($sql) ? $sql : array($sql);
     foreach ($sql as $query) {
-      $query = trim($query, " \n;");
-      $this->queryQueue[] = $query . ';';
+      $this->queryQueue = array_merge(
+          $this->queryQueue,
+          SQL::splitQueries($query)
+      );
     }
   }
 
