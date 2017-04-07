@@ -20,7 +20,7 @@ There is no guarantee or warranty with this extension. If you've made a custom f
 ### Contributions and complaints
 
 * Contributions are welcome via the GitHub project page. You know what to do. Bug reports are contributions.
-* Complaints are welcome! A NZD$150 processing fee is required in advance. [Send NZD$150 to my PayPal account](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=WB3P25G5WV692) and I'll be in touch.
+* Complaints are welcome! A NZD 150 processing fee is required in advance. [Send NZD$150 to my PayPal account](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=WB3P25G5WV692) and I'll be in touch.
 
 ## Installation
 
@@ -32,20 +32,33 @@ Congratulations, you made it past the pseudolegal boilerplate! Sorry if that fre
 
 Examples below use Drush, but you can of course use any CiviCRM API interface you prefer.
 
-### Anonymize a single contact
+### Bulk anonymization
+
+This command will anonymize the entire database, based on default settings.
+
+    cv api database.anonymize
+    
+This command will print all the SQL queries that *would* run, but it won't run them. If you like, you can pipe this output to `mysql` or redirect it to a file for running later.
+
+    cv api database.anonymize --out=none dry-run=1
+
+
+### Piecemeal anonymization
+
+#### Anonymize a single contact
 
 Use the Contact.anonymize API to anonymize a contact. Identify the target contact by id, eg
 
-    drush cvapi Contact.anonymize id=1234
+    cv api Contact.anonymize id=1234
 
-### Anonymize an email or address
+#### Anonymize an email or address
 
 If you anonymize the related contact, this will happen automatically, but you can directly anonymize these entities also. The id here is the Email or Address id, not the parent entity.
 
-    drush cvapi Contact.anonymize id=12345
+    cv api Email.anonymize id=12345
 
 ### Locales
 
 Some Anonymise methods accept a locale, so you can generate names and addresses that match your demographic.
 
-    drush cvapi Contact.anonymize id=1234 locale=fr_FR
+    cv api Contact.anonymize id=1234 locale=fr_FR
