@@ -194,7 +194,7 @@ class SQL {
       $stringLength = self::randomInteger(min($length), max($length));
       // Take only a part of the string, beginning with the first character
       // and taking a random length
-      return "SUBSTRING($longString, 1, $stringLength)";
+      return "SUBSTRING($longString,\n    1, $stringLength)";
     }
   }
 
@@ -307,7 +307,7 @@ class SQL {
       return $values[0];
     }
 
-    return "CONCAT(" . implode(", \n    ", $values) . ")";
+    return "CONCAT(\n    " . implode(", \n    ", $values) . ")";
   }
 
   /**
@@ -318,7 +318,8 @@ class SQL {
   public static function renderFromTemplate($templateName, $replacements = array()) {
     $loader = new Twig_Loader_Filesystem(SQL_TEMPLATE_DIR);
     $twig = new Twig_Environment($loader);
-    return $twig->render("$templateName.sql.twig", $replacements);
+    $twigResult = $twig->render("$templateName.sql.twig", $replacements);
+    return htmlspecialchars_decode($twigResult);
   }
 
   /**

@@ -100,4 +100,23 @@ abstract class FieldProcessor extends Processor {
     $this->addSQLToUpdateField(SQL::randomStringFromPattern($pattern));
   }
 
+  /**
+   * Picks one of the values from within an option group
+   * @param $groupName string (e.g. "individual_suffix")
+   */
+  protected function addSQLUpdateFromOptionValues($groupName) {
+    $groupName = SQL::stringLiteral($groupName);
+    $select = "SELECT v.value
+      FROM civicrm_option_value v
+      JOIN civicrm_option_group g ON
+        g.id = v.option_group_id
+      WHERE g.name = $groupName";
+    $this->addSQL(SQL::updateFieldsFromRandomChoice(
+      $this->table,
+      array($this->field => 'int(10)'),
+      $select,
+      $this->whereConditions
+    ));
+  }
+
 }

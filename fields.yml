@@ -75,16 +75,16 @@ contact:
       fake: fake_last_name
       jumble: jumble_all
 
-    prefix_id: random_foreign_key
+    prefix_id: random_prefix_id
 
-    suffix_id: random_foreign_key
+    suffix_id: random_suffix_id
   
     job_title:
       random: random_name
       fake: fake_job_title
       jumble: jumble_all
 
-    gender_id: random_foreign_key
+    gender_id: random_gender_id
 
     birth_date: random_birth_date
 

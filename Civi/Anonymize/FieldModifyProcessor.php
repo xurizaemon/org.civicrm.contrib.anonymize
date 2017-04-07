@@ -160,8 +160,8 @@ class FieldModifyProcessor extends FieldProcessor {
     $this->addSQLToUpdateField($email);
   }
 
-  protected function random_foreign_key() {
-    $this->addSQL(array()); // @TODO
+  protected function random_gender_id() {
+    $this->addSQLUpdateFromOptionValues('gender');
   }
 
   protected function random_is_deceased_and_date() {
@@ -182,6 +182,10 @@ class FieldModifyProcessor extends FieldProcessor {
     $this->addSQLUpdateFromLocaleBasedPatterns(array(
       'en_US' => '\d\d\d\d\d',
     ));
+  }
+
+  protected function random_prefix_id() {
+    $this->addSQLUpdateFromOptionValues('individual_prefix');
   }
 
   protected function random_state_province_id() {
@@ -207,6 +211,10 @@ class FieldModifyProcessor extends FieldProcessor {
       SQL::stringLiteral(".")
     );
     $this->addSQLToUpdateField($address);
+  }
+
+  protected function random_suffix_id() {
+    $this->addSQLUpdateFromOptionValues('individual_suffix');
   }
 
   protected function skip() {
