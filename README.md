@@ -22,6 +22,10 @@ There is no guarantee or warranty with this extension. If you've made a custom f
 * Contributions are welcome via the GitHub project page. You know what to do. Bug reports are contributions.
 * Complaints are welcome! A NZD 150 processing fee is required in advance. [Send NZD$150 to my PayPal account](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=WB3P25G5WV692) and I'll be in touch.
 
+#### A note on the above
+
+That was a little joke. If you want to participate in any way to making open source better, join us!
+
 ## Installation
 
 There's no release yet, which means you need to clone the git repo and then use `composer update`. 
