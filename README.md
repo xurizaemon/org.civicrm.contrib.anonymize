@@ -28,7 +28,7 @@ That was a little joke. If you want to participate in any way to making open sou
 
 ## Installation
 
-There's no release yet, which means you need to clone the git repo and then use `composer update`. 
+There's no release yet, which means you need to clone the git repo and then use `composer install` before the new API calls will work.
 
 ## How to use
 
