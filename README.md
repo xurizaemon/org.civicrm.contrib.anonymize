@@ -40,11 +40,19 @@ Examples below use [`cv`](https://github.com/civicrm/cv), but you can of course 
 
 This command will anonymize the entire database, based on default settings.
 
-    cv api Database.anonymize
-    
-This command will print all the SQL queries that *would* run, but it won't run them. If you like, you can pipe this output to `mysql` or redirect it to a file for running later.
+```bash
+cv api Database.anonymize
+```
+This next command will print all the SQL queries that *would* run, but it won't run them. If you like, you can pipe this output to `mysql` or redirect it to a file for running later.
 
-    cv api Database.anonymize --out=none dry-run=1
+```bash
+cv api Database.anonymize --out=none dry-run=1
+```
+Here's a slower method of updating Individual contacts for the entire DB:
+
+```bash
+cv api -I Contact.get limit=0 contact_type=Individual | while read CID ; do cv api Contact.anonymize locale=en_NZ id=$CID ; done
+```
 
 ### Piecemeal anonymization
 
@@ -52,16 +60,20 @@ This command will print all the SQL queries that *would* run, but it won't run t
 
 Use the Contact.anonymize API to anonymize a contact. Identify the target contact by id, eg
 
-    cv api Contact.anonymize id=1234
-
+```bash
+cv api Contact.anonymize id=1234
+```
 #### Anonymize an email or address
 
 If you anonymize the related contact, this will happen automatically, but you can directly anonymize these entities also. The id here is the Email or Address id, not the parent entity.
 
-    cv api Email.anonymize id=12345
-
+```bash
+cv api Email.anonymize id=12345
+```
 ### Locales
 
 Some Anonymise methods accept a locale, so you can generate names and addresses that match your demographic.
 
-    cv api Contact.anonymize id=1234 locale=fr_FR
+```bash
+cv api Contact.anonymize id=1234 locale=fr_FR
+```

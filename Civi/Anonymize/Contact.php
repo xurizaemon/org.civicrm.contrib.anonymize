@@ -16,6 +16,10 @@ class Contact {
    * civicrm_api3_contact_anonymize() now (see commit), and perhaps this can go
    * in future.
    *
+   * CiviCRM now lets sites customise available gender options, and the
+   * contrib [Gender Self-Identify](https://civicrm.org/extensions/gender-self-identify)
+   * extension improves on this further.
+   *
    * @param int|null $gender_id
    *   CiviCRM gender ID.
    *
