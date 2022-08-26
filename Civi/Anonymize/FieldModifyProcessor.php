@@ -192,6 +192,8 @@ class FieldModifyProcessor extends FieldProcessor {
   protected function random_postal_code() {
     $this->addSQLUpdateFromLocaleBasedPatterns(array(
       'en_US' => '\d\d\d\d\d',
+      'en_CA' => '\u\d\u \d\u\d',
+      'fr_CA' => '\u\d\u \d\u\d',
     ));
   }
 
