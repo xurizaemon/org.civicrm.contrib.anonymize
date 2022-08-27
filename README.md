@@ -2,6 +2,28 @@
 
 This extension is intended to anonymize your database, so you can share your CiviCRM DB more readily.
 
+--
+
+## Moved!
+
+Hello,
+
+I have moved the project space for org.civicrm.contrib.anonymize to CiviCRM's Gitlab.
+This includes both the issue tracking and support, and merge requests.
+
+The new URL is: https://lab.civicrm.org/xurizaemon/org.civicrm.contrib.anonymize
+
+All issues have been migrated to: https://lab.civicrm.org/xurizaemon/org.civicrm.contrib.anonymize/issues
+
+If you do not already have an account on CiviCRM's Gitlab, you can create an account
+by registering on https://civicrm.org/user
+
+See https://github.com/xurizaemon/org.civicrm.contrib.anonymize/pull/17 for discussion.
+
+Thank you!
+
+----
+
 ## Terms of use
 
 * You're responsible for your data.
